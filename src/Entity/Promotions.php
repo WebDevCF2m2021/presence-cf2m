@@ -75,9 +75,13 @@ class Promotions
     #[ORM\JoinColumn(nullable: false)]
     private $options;
 
+    #[ORM\ManyToMany(targetEntity: Holiday::class, mappedBy: 'promotions')]
+    private $holidays;
+
     public function __construct()
     {
         $this->registrations = new ArrayCollection();
+        $this->holidays = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -195,6 +199,33 @@ class Promotions
     public function setOptions(?Options $options): self
     {
         $this->options = $options;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Holiday>
+     */
+    public function getHolidays(): Collection
+    {
+        return $this->holidays;
+    }
+
+    public function addHoliday(Holiday $holiday): self
+    {
+        if (!$this->holidays->contains($holiday)) {
+            $this->holidays[] = $holiday;
+            $holiday->addPromotion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHoliday(Holiday $holiday): self
+    {
+        if ($this->holidays->removeElement($holiday)) {
+            $holiday->removePromotion($this);
+        }
 
         return $this;
     }
