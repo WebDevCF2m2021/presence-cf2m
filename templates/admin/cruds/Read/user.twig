@@ -1,7 +1,6 @@
 {% extends "layout/layout.html.twig" %}
-{% block innerTitle %}User{% endblock %}
+{% block innerTitle %}{{ user.thename }} {{ user.thesurname }}{% endblock %}
 {% block main %}
-    {{ dump(user) }}
     <table>
         <thead>
         <tr>
@@ -15,11 +14,14 @@
         </tr>
         </thead>
         <tbody>
-
         <tr>
             <td>{{ user.id }}</td>
             <td>{{ user.username }}</td>
-            <td>{{ user.roles }}</td>
+            <td>
+                {% for role in user.roles %}
+                    {{ role }} {% if not loop|last %}|{% endif %}
+                {% endfor %}
+            </td>
             <td>{{ user.thename }}</td>
             <td>{{ user.thesurname }}</td>
             <td>{{ user.themail }}</td>
